@@ -18,11 +18,10 @@ use papyrus_config::dumping::{ser_optional_param, ser_param, SerializeConfig};
 use papyrus_config::{ParamPath, ParamPrivacyInput, SerializedParam};
 use papyrus_network::network_manager::ReportCallback;
 use papyrus_protobuf::converters::ProtobufConversionError;
-use papyrus_protobuf::sync::{DataOrFin, Query, SignedBlockHeader};
+use papyrus_protobuf::sync::{DataOrFin, Query, SignedBlockHeader, StateDiffChunk};
 use papyrus_storage::{StorageError, StorageReader, StorageWriter};
 use serde::{Deserialize, Serialize};
 use starknet_api::block::{BlockNumber, BlockSignature};
-use starknet_api::state::ThinStateDiff;
 use tokio_stream::StreamExt;
 use tracing::instrument;
 
@@ -172,7 +171,7 @@ where
     // TODO(shahak): Change to StateDiffQuery.
     StateDiffQuerySender: Sink<Query, Error = SendError> + Unpin + Send + 'static,
     // TODO(shahak): Change to StateDiffChunk.
-    StateDiffResponseReceiver: Stream<Item = Response<ThinStateDiff>> + Unpin + Send + 'static,
+    StateDiffResponseReceiver: Stream<Item = Response<StateDiffChunk>> + Unpin + Send + 'static,
 {
     pub fn new(
         config: P2PSyncConfig,
